@@ -35,6 +35,10 @@ stages:
         displayName: "Plan"
         dependsOn: Init
         steps:
+        - task: TerraformInstaller@1
+          displayName: "Terraform_Installer"
+          inputs:
+            terraformVersion: 'latest'
         - task: TerraformTask@5
           displayName: "Terraform_Init"
           inputs:
@@ -66,6 +70,10 @@ stages:
         dependsOn: Plan
         displayName: "Validate"
         steps:
+        - task: TerraformInstaller@1
+          displayName: "Terraform_Installer"
+          inputs:
+            terraformVersion: 'latest'
         - task: TerraformTask@5
           displayName: "Terraform_Validate"
           inputs:
@@ -94,6 +102,10 @@ stages:
       - job: Init
         displayName: "Init_Prod"
         steps:
+        - task: TerraformInstaller@1
+          displayName: "Terraform_Installer"
+          inputs:
+            terraformVersion: 'latest'
         - task: TerraformTask@5
           displayName: "Terraform_Init"
           inputs:
@@ -118,7 +130,12 @@ stages:
         displayName: "Plan_in_Prod"
         dependsOn: Init
         steps:
+        - task: TerraformInstaller@1
+          displayName: "Terraform_Installer"
+          inputs:
+            terraformVersion: 'latest'
         - task: TerraformTask@5
+          displayName: "Terraform_Init"
           inputs:
             provider: 'azurerm'
             command: 'init'
@@ -139,6 +156,10 @@ stages:
         displayName: "Validate_In_Prod"
         dependsOn: Plan
         steps:
+        - task: TerraformInstaller@1
+          displayName: "Terraform_Installer"
+          inputs:
+            terraformVersion: 'latest'
         - task: TerraformTask@5
           displayName: "Terraform_Validate"
           inputs:
@@ -149,6 +170,10 @@ stages:
         displayName: "Apply_In_Prod"
         dependsOn: Validate
         steps:
+        - task: TerraformInstaller@1
+          displayName: "Terraform_Installer"
+          inputs:
+            terraformVersion: 'latest'
         - task: TerraformTask@5
           displayName: "Terraform_Init"
           inputs:
