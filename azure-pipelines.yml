@@ -33,6 +33,7 @@ stages:
             backendAzureRmKey: 'infra.tfstate'
       - job: Plan
         displayName: "Plan"
+        dependsOn: Init
         steps:
         - task: TerraformTask@5
           displayName: "Terraform_Init"
@@ -62,9 +63,11 @@ stages:
             workingDirectory: '$(config_path)'
             environmentServiceNameAzureRM: 'Azure_Pipelines'
       - job: Validate
+        dependsOn: Plan
         displayName: "Validate"
         steps:
         - task: TerraformTask@5
+          displayName: "Terraform_Validate"
           inputs:
             provider: 'azurerm'
             command: 'validate'
@@ -72,6 +75,7 @@ stages:
   - stage: Approval
     pool: server
     displayName: "Approval"
+    dependsOn: Dev
     jobs:
       - job: Manual_Validation
         displayName: "Manual_Validation"
@@ -85,6 +89,7 @@ stages:
   - stage: Prod
     pool: Initial Pool
     displayName: "Prod"
+    dependsOn: Approval
     jobs:
       - job: Init
         displayName: "Init_Prod"
@@ -111,6 +116,7 @@ stages:
             environmentServiceNameAzureRM: 'Azure_Pipelines'
       - job: Plan
         displayName: "Plan_in_Prod"
+        dependsOn: Init
         steps:
         - task: TerraformTask@5
           inputs:
@@ -131,6 +137,7 @@ stages:
             environmentServiceNameAzureRM: 'Azure_Pipelines'
       - job: Validate
         displayName: "Validate_In_Prod"
+        dependsOn: Plan
         steps:
         - task: TerraformTask@5
           displayName: "Terraform_Validate"
@@ -140,6 +147,7 @@ stages:
             workingDirectory: '$(config_path)'
       - job: Apply
         displayName: "Apply_In_Prod"
+        dependsOn: Validate
         steps:
         - task: TerraformTask@5
           displayName: "Terraform_Init"
