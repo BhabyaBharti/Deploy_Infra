@@ -172,6 +172,17 @@ stages:
           inputs:
             terraformVersion: 'latest'
         - task: TerraformTask@5
+          displayName: "Terraform_Init"
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(config_path)'
+            backendServiceArm: 'Azure_Pipelines'
+            backendAzureRmResourceGroupName: 'RG_State'
+            backendAzureRmStorageAccountName: 'persistentstate'
+            backendAzureRmContainerName: 'container-state'
+            backendAzureRmKey: 'infra.tfstate'
+        - task: TerraformTask@5
           displayName: "Terraform_Validate"
           inputs:
             provider: 'azurerm'
